@@ -1,24 +1,26 @@
-﻿namespace AiNotetakerApp
+﻿using AiNotetakerApp.ViewModels;
+
+namespace AiNotetakerApp
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly MainViewModel _viewModel;
 
-        public MainPage()
+        public MainPage(MainViewModel viewModel)
         {
             InitializeComponent();
+
+            // Set the BindingContext so the XAML knows where to find its data
+            _viewModel = viewModel;
+            BindingContext = _viewModel;
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        protected override async void OnAppearing()
         {
-            count++;
+            base.OnAppearing();
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            // Automatically load meetings when the page appears on screen
+            await _viewModel.LoadMeetingsAsync();
         }
     }
 }

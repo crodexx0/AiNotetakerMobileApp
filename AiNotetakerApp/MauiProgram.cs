@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using AiNotetakerApp.Data;
+using AiNotetakerApp.ViewModels;
 
 namespace AiNotetakerApp
 {
@@ -20,8 +21,12 @@ namespace AiNotetakerApp
     		builder.Logging.AddDebug();
 #endif
 
-            // Register the Database Service as a Singleton
+            // 1. Register Services - Register the Database Service as a Singleton
             builder.Services.AddSingleton<DatabaseService>();
+            // 2. Register ViewModels
+            builder.Services.AddSingleton<MainViewModel>();
+            // 3. Register Pages
+            builder.Services.AddSingleton<MainPage>();
 
             return builder.Build();
         }
