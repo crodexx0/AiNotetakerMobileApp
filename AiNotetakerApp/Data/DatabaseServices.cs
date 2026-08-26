@@ -53,7 +53,7 @@ namespace AiNotetakerApp.Data
         public async Task<List<Folder>> GetFoldersAsync()
         {
             await Init();
-            return await _database.Table <Folder>().ToListAsync();
+            return await _database.Table<Folder>().ToListAsync();
         }
 
         public async Task<int> SaveFolderAsync(Folder item)

@@ -30,7 +30,7 @@ namespace AiNotetakerApp.ViewModels
         [RelayCommand]
         public async Task LoadMeetingsAsync()
         {
-            if (_isBusy) return;
+            if (IsBusy) return;
 
             try
             {
@@ -50,7 +50,7 @@ namespace AiNotetakerApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task SaveMeetingsAsync()
+        public async Task AddMockMeetingAsync()
         {
             // For testing the UI before we build the recording logic
             var newMeeting = new Meeting
