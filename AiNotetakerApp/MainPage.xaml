@@ -26,7 +26,9 @@
         <!-- The Meeting List -->
         <CollectionView Grid.Row="1" 
                         ItemsSource="{Binding Meetings}"
-                        SelectionMode="Single">
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding GoToDetailsCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
 
             <!-- What to show when the database is empty -->
             <CollectionView.EmptyView>
@@ -70,17 +72,29 @@
 
         <!-- Floating Action Button layered on top of the bottom right corner -->
         <Button Grid.Row="1"
-                Text="+ Add Mock Meeting"
-                Command="{Binding AddMockMeetingCommand}"
+                Text="{Binding IsRecording, StringFormat='{0}'}"
+                Command="{Binding ToggleRecordingCommand}"
                 HorizontalOptions="End"
                 VerticalOptions="End"
                 Margin="20"
                 CornerRadius="25"
                 HeightRequest="50"
-                BackgroundColor="#0052cc"
-                TextColor="White"
+                WidthRequest="150"
                 FontAttributes="Bold"
-                Shadow="{Shadow Brush=Black, Offset='0,4', Opacity=0.2}"/>
+                Shadow="{Shadow Brush=Black, Offset='0,4', Opacity=0.2}">
+            <Button.Triggers>
+                <DataTrigger TargetType="Button" Binding="{Binding IsRecording}" Value="False">
+                    <Setter Property="Text" Value="🎙️ Record"/>
+                    <Setter Property="BackgroundColor" Value="#0052cc"/>
+                    <Setter Property="TextColor" Value="White"/>
+                </DataTrigger>
+                <DataTrigger TargetType="Button" Binding="{Binding IsRecording}" Value="True">
+                    <Setter Property="Text" Value="⏹ Stop Recording"/>
+                    <Setter Property="BackgroundColor" Value="Red"/>
+                    <Setter Property="TextColor" Value="White"/>
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
     </Grid>
 
 </ContentPage>

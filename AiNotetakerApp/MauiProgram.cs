@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using AiNotetakerApp.Data;
 using AiNotetakerApp.ViewModels;
+using AiNotetakerApp.Services;
+using Plugin.Maui.Audio;
 
 namespace AiNotetakerApp
 {
@@ -23,6 +25,11 @@ namespace AiNotetakerApp
 
             // 1. Register Services - Register the Database Service as a Singleton
             builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton<AudioService>();
+            builder.Services.AddSingleton(AudioManager.Current);
+            builder.Services.AddSingleton<AiService>();
+            builder.Services.AddTransient<MeetingDetailViewModel>();
+            builder.Services.AddTransient<MeetingDetailPage>();
             // 2. Register ViewModels
             builder.Services.AddSingleton<MainViewModel>();
             // 3. Register Pages
