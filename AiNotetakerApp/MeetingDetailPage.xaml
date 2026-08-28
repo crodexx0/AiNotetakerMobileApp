@@ -12,6 +12,39 @@
             <Label Text="{Binding CurrentMeeting.Title}" FontSize="24" FontAttributes="Bold"/>
             <Label Text="{Binding CurrentMeeting.StartTime, StringFormat='{0:f}'}" TextColor="Gray"/>
 
+            <!-- Audio Player Control -->
+            <Frame BackgroundColor="#E2E8F0" HasShadow="False" CornerRadius="8" Padding="15" Margin="0,10,0,0">
+                <Grid ColumnDefinitions="Auto, *">
+                    <!-- Play/Pause Button -->
+                    <Button Grid.Column="0" 
+                            Command="{Binding TogglePlaybackCommand}"
+                            CornerRadius="25"
+                            HeightRequest="50"
+                            WidthRequest="140"
+                            BackgroundColor="#0052cc"
+                            TextColor="White"
+                            FontAttributes="Bold">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsPlaying}" Value="False">
+                                <Setter Property="Text" Value="▶️ Play Audio" />
+                                <Setter Property="BackgroundColor" Value="#0052cc" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsPlaying}" Value="True">
+                                <Setter Property="Text" Value="⏸ Pause" />
+                                <Setter Property="BackgroundColor" Value="#475569" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    
+                    <Label Grid.Column="1" 
+                           Text="Original Recording" 
+                           VerticalOptions="Center" 
+                           Margin="15,0,0,0"
+                           TextColor="#64748B"
+                           FontAttributes="Bold"/>
+                </Grid>
+            </Frame>
+
             <Label Text="AI Summary" FontSize="18" FontAttributes="Bold" Margin="0,15,0,0"/>
             <Frame BackgroundColor="#F1F5F9" HasShadow="False" BorderColor="Transparent" CornerRadius="8">
                 <Label Text="{Binding CurrentMeeting.AiSummary}" TextColor="#334155" />
@@ -27,4 +60,6 @@
             
         </VerticalStackLayout>
     </ScrollView>
+
+    
 </ContentPage>
