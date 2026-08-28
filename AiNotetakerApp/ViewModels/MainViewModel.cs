@@ -13,6 +13,7 @@ namespace AiNotetakerApp.ViewModels
         private readonly DatabaseService _databaseService;
         private readonly AudioService _audioService;
         private readonly AiService _aiService;
+        private readonly CalendarService _calendarService;
 
         // ObservableCollection automatically updates the UI when items are added or removed
         [ObservableProperty]
@@ -25,11 +26,12 @@ namespace AiNotetakerApp.ViewModels
         private bool _isRecording;
 
         // Constructor Injection: The app automatically provides the DatabaseService here
-        public MainViewModel(DatabaseService databaseService, AudioService audioService, AiService aiService)
+        public MainViewModel(DatabaseService databaseService, AudioService audioService, AiService aiService, CalendarService calendarService)
         {
             _databaseService = databaseService;
             _audioService = audioService;
             _aiService = aiService;
+            _calendarService = calendarService;
             _meetings = new ObservableCollection<Meeting>();
         }
 
@@ -106,8 +108,18 @@ namespace AiNotetakerApp.ViewModels
                         newMeeting.AiSummary = aiResult.Summary;
                         newMeeting.ActionItems = aiResult.ActionItems;
 
+                        // --- NEW CALENDAR SYNC CODE ---
+                        string eventId = await _calendarService.CreateMeetingEventAsync(newMeeting);
+                        if (!string.IsNullOrEmpty(eventId))
+                        {
+                            newMeeting.CalendarEventId = eventId;
+                        }
+
                         await _databaseService.SaveMeetingAsync(newMeeting);
-                        await LoadMeetingsAsync(); // Refresh UI to show the update
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            LoadMeetingsCommand.Execute(null); // Refresh UI to show the update
+                        }); 
                     }
                 } catch (Exception ex)
                 {

@@ -28,8 +28,9 @@ namespace AiNotetakerApp
             builder.Services.AddSingleton<AudioService>();
             builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddSingleton<AiService>();
-            builder.Services.AddTransient<MeetingDetailViewModel>();
-            builder.Services.AddTransient<MeetingDetailPage>();
+            builder.Services.AddSingleton<MeetingDetailViewModel>();
+            builder.Services.AddSingleton<MeetingDetailPage>();
+            builder.Services.AddSingleton<CalendarService>();
             // 2. Register ViewModels
             builder.Services.AddSingleton<MainViewModel>();
             // 3. Register Pages
