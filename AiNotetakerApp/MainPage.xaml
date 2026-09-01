@@ -7,6 +7,9 @@
              x:DataType="viewmodels:MainViewModel"
              Title="AI Notetaker">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="⚙️ Settings" Command="{Binding GoToSettingsCommand}" />
+    </ContentPage.ToolbarItems>
 
     <!-- A Grid allows us to layer UI elements on top of each other -->
     <Grid>

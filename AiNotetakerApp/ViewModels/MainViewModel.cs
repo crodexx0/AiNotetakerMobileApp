@@ -158,5 +158,11 @@ namespace AiNotetakerApp.ViewModels
             
             await Shell.Current.GoToAsync(nameof(MeetingDetailPage), navigationParameter);
         }
+
+        [RelayCommand]
+        public async Task GoToSettingsAsync()
+        {
+            await Shell.Current.GoToAsync(nameof(SettingsPage));
+        }
     }
 }

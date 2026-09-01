@@ -14,7 +14,13 @@ namespace AiNotetakerApp.Services
         private async Task<string> GetApiKeyAsync()
         {
             var key = await SecureStorage.Default.GetAsync("OpenAiKey");
-            return string.IsNullOrEmpty(key) ? "ENTER_KEY_IN_APP_SETTINGS" : key;
+            
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new Exception("API Key is missing. Please add it in the Settings page.");
+            }
+
+            return key;
         }
 
         //public AiService()

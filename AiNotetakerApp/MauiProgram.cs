@@ -31,6 +31,8 @@ namespace AiNotetakerApp
             builder.Services.AddSingleton<MeetingDetailViewModel>();
             builder.Services.AddSingleton<MeetingDetailPage>();
             builder.Services.AddSingleton<CalendarService>();
+            builder.Services.AddTransient<SettingsViewModel>();
+            builder.Services.AddTransient<SettingsPage>();
             // 2. Register ViewModels
             builder.Services.AddSingleton<MainViewModel>();
             // 3. Register Pages

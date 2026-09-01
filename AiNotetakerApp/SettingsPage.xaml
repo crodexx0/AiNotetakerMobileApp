@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ViewModels="clr-namespace:AiNotetakerApp.ViewModels"
+             x:Class="AiNotetakerApp.SettingsPage"
+             x:DataType="ViewModels:SettingsViewModel"
+             Title="Settings">
+    
+    <VerticalStackLayout Padding="20" Spacing="20">
+        
+        <Label Text="OpenAI Configuration" FontSize="22" FontAttributes="Bold" TextColor="#1E293B"/>
+
+        <Label Text="Enter your OpenAI API key. It will be encrypted and stored securely on this device. Do not share this key with anyone." 
+               FontSize="14" 
+               TextColor="#64748B" />
+
+        <!-- IsPassword="True" hides the characters with asterisks for security -->
+        <Entry Text="{Binding ApiKey}" 
+               Placeholder="sk-..." 
+               IsPassword="True" 
+               ClearButtonVisibility="WhileEditing"
+               BackgroundColor="#F1F5F9"
+               TextColor="#333333"/>
+
+        <Button Text="Save Key" 
+                Command="{Binding SaveApiKeyCommand}" 
+                BackgroundColor="#0052cc" 
+                TextColor="White" 
+                FontAttributes="Bold"
+                CornerRadius="8" 
+                HeightRequest="50"/>
+        
+    </VerticalStackLayout>
+</ContentPage>
