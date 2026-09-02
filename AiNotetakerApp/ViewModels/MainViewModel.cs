@@ -5,6 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using AiNotetakerApp.Services;
+using System.Linq;
+
 
 namespace AiNotetakerApp.ViewModels
 {
@@ -20,6 +22,12 @@ namespace AiNotetakerApp.ViewModels
         private ObservableCollection<Meeting> _meetings;
 
         [ObservableProperty]
+        private ObservableCollection<Folder> _folders;
+
+        [ObservableProperty]
+        private Folder _selectedFolder;
+
+        [ObservableProperty]
         private bool _isBusy;
 
         [ObservableProperty]
@@ -32,35 +40,77 @@ namespace AiNotetakerApp.ViewModels
             _audioService = audioService;
             _aiService = aiService;
             _calendarService = calendarService;
+
             _meetings = new ObservableCollection<Meeting>();
+            _folders = new ObservableCollection<Folder>();
+        }
+
+        partial void OnSelectedFolderChanged(Folder value)
+        {
+            LoadMeetingsCommand.Execute(null); // Refresh meetings when folder changes
         }
 
         // The [RelayCommand} attribute automatically turns this method into a command
         // that you button can bind to in the XAML (e.g., Command="{Binding LoadMeetingsCommand}")
         [RelayCommand]
+        public async Task LoadFolderAsync()
+        {
+            var foldersFromDb = await _databaseService.GetFoldersAsync();
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Folders.Clear();
+
+                // Add a default "All Meetings" folder at the front
+                Folders.Add(new Folder { Id = 0, Name = "All Meetings" });
+
+                foreach (var folder in foldersFromDb)
+                {
+                    Folders.Add(folder);
+                }
+
+                // Select "All Meetings" by default if nothing is selected
+                if (SelectedFolder == null)
+                {
+                    SelectedFolder = Folders.First();
+                }
+            });
+        }
+
+        [RelayCommand]
+        public async Task CreateFolderAsync()
+        {
+            // Prompt the user for a folder name directly on the screen
+            string folderName = await Application.Current.MainPage.DisplayPromptAsync("New Folder", "Enter folder name:");
+
+            if (!string.IsNullOrWhiteSpace(folderName))
+            {
+                var newFolder = new Folder { Name = folderName.Trim() };
+                await _databaseService.SaveFolderAsync(newFolder);
+                await LoadFolderAsync(); // Refresh the folder list
+            }
+        }
+
+        [RelayCommand]
         public async Task LoadMeetingsAsync()
         {
-            if (IsBusy) return;
+            var meetingsFromDb = await _databaseService.GetMeetingAsync();
 
-            try
+            // Filter meetings based on the selected folder (unless "All Meetings" ID 0 is selected)
+            if (SelectedFolder != null && SelectedFolder.Id != 0)
             {
-                IsBusy = true;
-
-                // Fetch from database
-                var meetingsFromDb = await _databaseService.GetMeetingAsync();
-                
-                // Force the UI to update on the Main Thread
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    // Clear and reload the observable collection
-                    Meetings.Clear();
-                    foreach (var meeting in meetingsFromDb)
-                    {
-                        Meetings.Add(meeting);
-                    }
-                });
+                meetingsFromDb = meetingsFromDb.Where(m => m.FolderId == SelectedFolder.Id).ToList();
             }
-            finally { IsBusy = false; };
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Meetings.Clear();
+                foreach (var meeting in meetingsFromDb)
+                {
+                    Meetings.Add(meeting);
+                }
+            });
+
         }
 
         [RelayCommand]
@@ -85,7 +135,8 @@ namespace AiNotetakerApp.ViewModels
                             StartTime = System.DateTime.Now,
                             AudioFilePath = savedFilePath,
                             Transcript = "Transcribing audio... Please wait.",
-                            AiSummary = "Waiting for transcription..."
+                            AiSummary = "Waiting for transcription...",
+                            FolderId = SelectedFolder?.Id ?? 0 // Assign to selected folder or default to 0
                         };
 
                         await _databaseService.SaveMeetingAsync(newMeeting);

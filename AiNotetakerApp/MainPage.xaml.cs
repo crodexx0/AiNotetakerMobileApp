@@ -20,6 +20,7 @@ namespace AiNotetakerApp
             base.OnAppearing();
 
             // Automatically load meetings when the page appears on screen
+            await _viewModel.LoadFolderAsync();
             await _viewModel.LoadMeetingsAsync();
         }
     }

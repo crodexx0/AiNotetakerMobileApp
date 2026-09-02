@@ -1,10 +1,13 @@
 ﻿using SQLite;
 using System;
+using Microsoft.Maui.Controls;
 
 namespace AiNotetakerApp.Models
 {
     public class Meeting
     {
+        [Preserve(AllMembers = true)]
+
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 

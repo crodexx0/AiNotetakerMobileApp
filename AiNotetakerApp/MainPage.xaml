@@ -21,9 +21,44 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <VerticalStackLayout Grid.Row="0" Padding="20">
-            <Label Text="My Meetings" FontSize="28" FontAttributes="Bold" />
-            <Label Text="Your transcripts and AI summaries" FontSize="14" TextColor="Gray" />
+        <!-- Header & Folders (Grid.Row="0") -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,20,20,0" Spacing="15">
+
+            <!-- Title and New Folder Button -->
+            <Grid ColumnDefinitions="*, Auto">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="My Meetings" FontSize="28" FontAttributes="Bold" />
+                    <Label Text="Your transcripts and AI summaries" FontSize="14" TextColor="Gray" />
+                </VerticalStackLayout>
+
+                <Button Grid.Column="1" 
+                        Text="+ Folder" 
+                        Command="{Binding CreateFolderCommand}" 
+                        BackgroundColor="#E2E8F0" 
+                        TextColor="#1E293B" 
+                        CornerRadius="8" 
+                        HeightRequest="40" 
+                        Padding="15,0"
+                        VerticalOptions="Start"/>
+            </Grid>
+
+            <!-- Horizontal Folder List -->
+            <CollectionView ItemsSource="{Binding Folders}"
+                            SelectedItem="{Binding SelectedFolder}"
+                            SelectionMode="Single"
+                            HeightRequest="45">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Folder">
+                        <!-- We use a Frame to make it look like a pill-shaped chip -->
+                        <Frame Padding="15,0" CornerRadius="20" BorderColor="#0052cc" BackgroundColor="Transparent" HasShadow="False">
+                            <Label Text="{Binding Name}" TextColor="#0052cc" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
 
         <!-- The Meeting List -->
