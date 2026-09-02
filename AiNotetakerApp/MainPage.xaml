@@ -54,7 +54,39 @@
                     <DataTemplate x:DataType="models:Folder">
                         <!-- We use a Frame to make it look like a pill-shaped chip -->
                         <Frame Padding="15,0" CornerRadius="20" BorderColor="#0052cc" BackgroundColor="Transparent" HasShadow="False">
-                            <Label Text="{Binding Name}" TextColor="#0052cc" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <!-- Frame Visual States -->
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="#0052cc" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Label Text="{Binding Name}" TextColor="#0052cc" FontAttributes="Bold" VerticalOptions="Center">
+                                <!-- Label Visual States -->
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup Name="CommonStates">
+                                        <VisualState Name="Normal">
+                                            <VisualState.Setters>
+                                                <Setter Property="TextColor" Value="#0052cc" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState Name="Selected">
+                                            <VisualState.Setters>
+                                                <Setter Property="TextColor" Value="White" />
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Label>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
